@@ -1,5 +1,6 @@
-import { Link, useLocation } from "react-router";
-import useAuthUser from "../hooks/useAuthUser";
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
+import useAuthUser from "../hooks/useAuthUser.js";
 import { BellIcon, HomeIcon, ShipWheelIcon, UsersIcon } from "lucide-react";
 
 const Sidebar = () => {
@@ -28,17 +29,6 @@ const Sidebar = () => {
           <HomeIcon className="size-5 text-base-content opacity-70" />
           <span>Home</span>
         </Link>
-
-        <Link
-          to="/friends"
-          className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
-            currentPath === "/friends" ? "btn-active" : ""
-          }`}
-        >
-          <UsersIcon className="size-5 text-base-content opacity-70" />
-          <span>Friends</span>
-        </Link>
-
         <Link
           to="/notifications"
           className={`btn btn-ghost justify-start w-full gap-3 px-3 normal-case ${
@@ -55,7 +45,7 @@ const Sidebar = () => {
         <div className="flex items-center gap-3">
           <div className="avatar">
             <div className="w-10 rounded-full">
-              <img src={authUser?.profilePic} alt="User Avatar" />
+              <img src={authUser?.profilePic || null} alt="User Avatar" />
             </div>
           </div>
           <div className="flex-1">

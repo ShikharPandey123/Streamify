@@ -1,7 +1,9 @@
+import React from "react";
 import { ShipWheelIcon } from "lucide-react";
 import { Link } from "react-router";
 
-import useSignUp from "../hooks/useSignUp";
+import useSignUp from "../hooks/useSignUp.js";
+import { useState } from "react";
 
 const SignUpPage = () => {
   const [signupData, setSignupData] = useState({
@@ -137,7 +139,7 @@ const SignUpPage = () => {
           <div className="max-w-md p-8">
             {/* Illustration */}
             <div className="relative aspect-square max-w-sm mx-auto">
-              <img src="/i.png" alt="Language connection illustration" className="w-full h-full" />
+              <img src="/Video call-bro.png" alt="Language connection illustration" className="w-full h-full" />
             </div>
 
             <div className="text-center space-y-3 mt-6">

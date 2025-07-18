@@ -15,13 +15,13 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minLength: 6,
+      minlength: 6,
     },
     bio: {
       type: String,
       default: "",
     },
-    profilePicture: {
+    profilePic: {
       type: String,
       default: "",
     },
@@ -52,9 +52,8 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
-    return next();
-  }
+  if (!this.isModified("password")) return next();
+
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -62,11 +61,13 @@ userSchema.pre("save", async function (next) {
   } catch (error) {
     next(error);
   }
-  next();
 });
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
+
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  const isPasswordCorrect = await bcrypt.compare(enteredPassword, this.password);
+  return isPasswordCorrect;
 };
+
 const User = mongoose.model("User", userSchema);
 
 export default User;

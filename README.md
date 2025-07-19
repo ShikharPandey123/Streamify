@@ -75,14 +75,7 @@ git clone https://github.com/your-org/streamify.git
 cd streamify
 npm install
 
-# Mongo<img width="1858" height="841" alt="Screenshot 2025-07-20 012937" src="https://github.com/user-attachments/assets/8<img width="1866" height="837" alt="Screenshot 2025-07-20 013003" src="https://gi<img width="1477" height="805" alt="Screenshot 2025-07-20 013440" src="https://github.com/user-attachments/assets/58863ab7-31f9-43e0-b291-7c3ac76bf515" />
-thub.com/user-attachments/assets/d4afcd45-7d6d-4b22-87c6-860ac5a0bbe1" />
-c0a7d6d-ada4-4a3c-aeb7-57ae49e28515" />
-
 MONGO_URI=mongodb://localhost:27017/streamify
-
-# JWT<img width="1858" height="841" alt="Screenshot 2025-07-2<img width="707" height="418" alt="Screenshot 2025-07-20 013520" src="https://github.com/user-attachments/assets/f37e894c-8752-41bf-8b93-11b70773b9af" />
-0 012937" src="https://github.com/user-attachments/assets/728f0bea-7931-4e03-bb74-3223e31f2489" />
 
 JWT_SECRET_KEY=your_jwt_secret
 
@@ -92,4 +85,9 @@ STREAM_SECRET=your_stream_secret
 
 # PORT
 PORT=5000
+```
+<img width="1477" height="805" alt="Screenshot 2025-07-20 013440" src="https://github.com/user-attachments/assets/e0ca8a5a-3931-4da4-9511-63eb9e9b0c56" />
+<img width="1866" height="837" alt="Screenshot 2025-07-20 013003" src="https://github.com/user-attachments/assets/aea3b7c1-4173-4f34-8d66-ec9be2d6c856" />
+<img width="1858" height="841" alt="Screenshot 2025-07-20 012937" src="https://github.com/user-attachments/assets/c1a040ff-4cfa-4cad-9bfb-b82878f0ed1e" />
+
 

@@ -35,49 +35,43 @@ const ChatPage = () => {
   const { data: tokenData } = useQuery({
     queryKey: ["streamToken"],
     queryFn: getStreamToken,
-    enabled: !!authUser, // this will run only when authUser is available
+    enabled: !!authUser,
   });
 
   useEffect(() => {
-    const initChat = async () => {
-      if (!tokenData?.token || !authUser) return;
+   const initChat = async () => {
+  if (!tokenData?.token || !authUser) return;
 
-      try {
-        console.log("Initializing stream chat client...");
+  try {
+    const client = StreamChat.getInstance(STREAM_API_KEY);
+    if (!client.userID) {
+      await client.connectUser(
+        {
+          id: authUser._id,
+          name: authUser.fullName,
+          image: authUser.profilePic,
+        },
+        tokenData.token
+      );
+    }
 
-        const client = StreamChat.getInstance(STREAM_API_KEY);
+    const channelId = [authUser._id, targetUserId].sort().join("-");
+    const currChannel = client.channel("messaging", channelId, {
+      members: [authUser._id, targetUserId],
+    });
 
-        await client.connectUser(
-          {
-            id: authUser._id,
-            name: authUser.fullName,
-            image: authUser.profilePic,
-          },
-          tokenData.token
-        );
+    await currChannel.watch();
 
-        //
-        const channelId = [authUser._id, targetUserId].sort().join("-");
+    setChatClient(client);
+    setChannel(currChannel);
+  } catch (error) {
+    console.error("Error initializing chat:", error);
+    toast.error("Could not connect to chat. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
-        // you and me
-        // if i start the chat => channelId: [myId, yourId]
-        // if you start the chat => channelId: [yourId, myId]  => [myId,yourId]
-
-        const currChannel = client.channel("messaging", channelId, {
-          members: [authUser._id, targetUserId],
-        });
-
-        await currChannel.watch();
-
-        setChatClient(client);
-        setChannel(currChannel);
-      } catch (error) {
-        console.error("Error initializing chat:", error);
-        toast.error("Could not connect to chat. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
 
     initChat();
   }, [tokenData, authUser, targetUserId]);

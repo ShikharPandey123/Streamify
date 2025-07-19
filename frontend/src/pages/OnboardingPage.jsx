@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useAuthUser from "../hooks/useAuthUser.js";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -26,28 +25,59 @@ const OnboardingPage = () => {
     profilePic: authUser?.profilePic || "",
   });
 
+  const [suggestions, setSuggestions] = useState([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const fetchSuggestions = async () => {
+      const query = formState.location;
+      if (!query || query.length < 3) return;
+
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            query
+          )}&addressdetails=1&limit=5`,
+          { signal: controller.signal }
+        );
+
+        const data = await res.json();
+        const cities = data.map((item) => item.display_name);
+        setSuggestions(cities);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Location fetch error:", error);
+        }
+      }
+    };
+
+    const debounce = setTimeout(fetchSuggestions, 300);
+    return () => {
+      clearTimeout(debounce);
+      controller.abort();
+    };
+  }, [formState.location]);
+
   const { mutate: onboardingMutation, isPending } = useMutation({
     mutationFn: completeOnboarding,
     onSuccess: () => {
       toast.success("Profile onboarded successfully");
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
-
     onError: (error) => {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Onboarding failed");
     },
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     onboardingMutation(formState);
   };
 
   const handleRandomAvatar = () => {
-    const idx = Math.floor(Math.random() * 100) + 1; // 1-100 included
+    const idx = Math.floor(Math.random() * 100) + 1;
     const randomAvatar = `https://robohash.org/${idx}.png`;
-
     setFormState({ ...formState, profilePic: randomAvatar });
     toast.success("Random profile picture generated!");
   };
@@ -61,9 +91,8 @@ const OnboardingPage = () => {
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* PROFILE PIC CONTAINER */}
+            {/* PROFILE PIC */}
             <div className="flex flex-col items-center justify-center space-y-4">
-              {/* IMAGE PREVIEW */}
               <div className="size-32 rounded-full bg-base-300 overflow-hidden">
                 {formState.profilePic ? (
                   <img
@@ -78,7 +107,6 @@ const OnboardingPage = () => {
                 )}
               </div>
 
-              {/* Generate Random Avatar BTN */}
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -110,8 +138,8 @@ const OnboardingPage = () => {
 
             {/* BIO */}
             <div className="form-control">
-              <label htmlFor="bio" className="label">
-                <span className="label-text">Bio</span>
+              <label htmlFor="bio" className="label px-0 pb-1">
+                <span className="label-text text-base">Bio</span>
               </label>
               <textarea
                 id="bio"
@@ -120,14 +148,13 @@ const OnboardingPage = () => {
                 onChange={(e) =>
                   setFormState({ ...formState, bio: e.target.value })
                 }
-                className="textarea textarea-bordered h-24"
+                className="textarea textarea-bordered w-full min-h-[120px]"
                 placeholder="Tell others about yourself and your language learning goals"
               ></textarea>
             </div>
 
             {/* LANGUAGES */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* NATIVE LANGUAGE */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Native Language</span>
@@ -152,7 +179,6 @@ const OnboardingPage = () => {
                 </select>
               </div>
 
-              {/* LEARNING LANGUAGE */}
               <div className="form-control">
                 <label className="label">
                   <span className="label-text">Learning Language</span>
@@ -184,7 +210,7 @@ const OnboardingPage = () => {
                 <span className="label-text">Location</span>
               </label>
               <div className="relative">
-                <MapPinIcon className="absolute top-1/2 transform -translate-y-1/2 left-3 size-5 text-base-content opacity-70" />
+                <MapPinIcon className="absolute z-10 top-1/2 -translate-y-1/2 left-3 size-5 text-base-content opacity-70" />
                 <input
                   list="locationSuggestions"
                   type="text"
@@ -197,17 +223,14 @@ const OnboardingPage = () => {
                   placeholder="City, Country"
                 />
                 <datalist id="locationSuggestions">
-                  <option value="New Delhi, India" />
-                  <option value="Mumbai, India" />
-                  <option value="Bangalore, India" />
-                  <option value="London, UK" />
-                  <option value="San Francisco, USA" />
+                  {suggestions.map((city, i) => (
+                    <option key={i} value={city} />
+                  ))}
                 </datalist>
               </div>
             </div>
 
-            {/* SUBMIT BUTTON */}
-
+            {/* SUBMIT */}
             <button
               className="btn btn-primary w-full"
               disabled={isPending}
@@ -231,4 +254,5 @@ const OnboardingPage = () => {
     </div>
   );
 };
+
 export default OnboardingPage;

@@ -87,8 +87,5 @@ STREAM_SECRET=your_stream_secret
 
 # PORT
 PORT=5000
-<img width="707" height="418" alt="Screenshot 2025-07-20 013520" src="https://github.com/user-attachments/assets/d9b021da-bbf0-4d79-b461-32b504cd0e6a" />
-<img width="1477" height="805" alt="Screenshot 2025-07-20 013440" src="https://github.com/user-attachments/assets/c27fc973-7b38-48c0-bdbb-9b42c2c04517" />
-<img width="1866" height="837" alt="Screenshot 2025-07-20 013003" src="https://github.com/user-attachments/assets/619f3dbe-b65a-445b-a897-8faa6c2658c5" />
-<img width="1858" height="841" alt="Screenshot 2025-07-20 012937" src="https://github.com/user-attachments/assets/e22a2f1a-697f-4ca0-bfbc-3f6b98a5fd09" />
+<img width="1858" height="841" alt="Screenshot 2025-07-20 012937" src="https://github.com/user-attachments/assets/45103423-1133-4ce8-98a7-2128b4073105" />
 

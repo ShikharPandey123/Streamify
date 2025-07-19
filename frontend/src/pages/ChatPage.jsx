@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import useAuthUser from "../hooks/useAuthUser.js";
@@ -39,39 +38,38 @@ const ChatPage = () => {
   });
 
   useEffect(() => {
-   const initChat = async () => {
-  if (!tokenData?.token || !authUser) return;
+    const initChat = async () => {
+      if (!tokenData?.token || !authUser) return;
 
-  try {
-    const client = StreamChat.getInstance(STREAM_API_KEY);
-    if (!client.userID) {
-      await client.connectUser(
-        {
-          id: authUser._id,
-          name: authUser.fullName,
-          image: authUser.profilePic,
-        },
-        tokenData.token
-      );
-    }
+      try {
+        const client = StreamChat.getInstance(STREAM_API_KEY);
+        if (!client.userID) {
+          await client.connectUser(
+            {
+              id: authUser._id,
+              name: authUser.fullName,
+              image: authUser.profilePic,
+            },
+            tokenData.token
+          );
+        }
 
-    const channelId = [authUser._id, targetUserId].sort().join("-");
-    const currChannel = client.channel("messaging", channelId, {
-      members: [authUser._id, targetUserId],
-    });
+        const channelId = [authUser._id, targetUserId].sort().join("-");
+        const currChannel = client.channel("messaging", channelId, {
+          members: [authUser._id, targetUserId],
+        });
 
-    await currChannel.watch();
+        await currChannel.watch();
 
-    setChatClient(client);
-    setChannel(currChannel);
-  } catch (error) {
-    console.error("Error initializing chat:", error);
-    toast.error("Could not connect to chat. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
-
+        setChatClient(client);
+        setChannel(currChannel);
+      } catch (error) {
+        console.error("Error initializing chat:", error);
+        toast.error("Could not connect to chat. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
     initChat();
   }, [tokenData, authUser, targetUserId]);
@@ -79,11 +77,9 @@ const ChatPage = () => {
   const handleVideoCall = () => {
     if (channel) {
       const callUrl = `${window.location.origin}/call/${channel.id}`;
-
       channel.sendMessage({
         text: `I've started a video call. Join me here: ${callUrl}`,
       });
-
       toast.success("Video call link sent successfully!");
     }
   };
@@ -91,26 +87,36 @@ const ChatPage = () => {
   if (loading || !chatClient || !channel) return <ChatLoader />;
 
   return (
-    <div className="h-screen overflow-hidden bg-green-100 relative">
-      <ArrowLeft
-        size={32}
-        className="text-black cursor-pointer absolute top-4 left-4 z-10"
-        onClick={() => navigate(-1)}
-      />
-      <Chat client={chatClient}>
-        <Channel channel={channel}>
-          <div className="w-full relative">
-            <CallButton handleVideoCall={handleVideoCall} />
-            <Window>
-              <ChannelHeader />
-              <MessageList additionalMessageInputProps={{ style: { overflowY: 'auto' } }}/>
-              <MessageInput focus />
-            </Window>
-          </div>
-          <Thread />
-        </Channel>
-      </Chat>
+    <div className="min-h-screen w-full bg-green-100 flex flex-col">
+      {/* Back Button */}
+      <div className="absolute top-4 left-4 z-10">
+        <ArrowLeft
+          size={28}
+          className="text-black cursor-pointer"
+          onClick={() => navigate(-1)}
+        />
+      </div>
+
+      {/* Chat Container */}
+      <div className="flex-1 flex flex-col md:items-center">
+        <div className="w-full md:max-w-3xl flex-1 relative">
+          <Chat client={chatClient} theme="messaging light">
+            <Channel channel={channel}>
+              <CallButton handleVideoCall={handleVideoCall} />
+              <Window>
+                <ChannelHeader />
+                <MessageList
+                  additionalMessageInputProps={{ style: { overflowY: "auto" } }}
+                />
+                <MessageInput focus />
+              </Window>
+              <Thread />
+            </Channel>
+          </Chat>
+        </div>
+      </div>
     </div>
   );
 };
+
 export default ChatPage;

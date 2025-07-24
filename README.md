@@ -1,4 +1,4 @@
-# 🌐 Streamify — Real-Time Language Learning Social Platform
+# 🌐 Streamify — Real-Time Chat and Video Call Web App
 
 **🔗 Live Demo:**  
 👉 [https://streamify-8sh2.onrender.com](https://streamify-8sh2.onrender.com)

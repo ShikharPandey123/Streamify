@@ -7,7 +7,7 @@
 
 ## ✨ Overview
 
-**Streamify** is a real-time social web app that helps users connect with language learners across the globe. With live messaging, friend suggestions, and a vibrant UI, it provides a rich learning and social experience — now with typing indicators, emoji reactions, and 32 unique UI themes!
+**Streamify** is a real-time chat and video call web app. With live messaging, friend suggestions, and a vibrant UI, it provides a rich learning and social experience — with typing indicators, emoji reactions, and 32 unique UI themes.
 
 ---
 
